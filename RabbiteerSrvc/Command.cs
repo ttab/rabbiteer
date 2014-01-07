@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,16 @@ namespace Rabbiteer
                 Console.WriteLine("Missing OutDir");
                 ok = false;
             }
+            string path = Path.GetFullPath(OutDir);
+            if (!System.IO.Directory.Exists(path))
+            {
+                Console.WriteLine("No such directory {0}", path);
+                ok = false;
+            }
+            else
+            {
+                OutDir = path;
+            }
             return ok;
         }
 
@@ -83,6 +94,16 @@ namespace Rabbiteer
             {
                 Console.WriteLine("Missing File");
                 ok = false;
+            }
+            string path = Path.GetFullPath(File);
+            if (!System.IO.File.Exists(path))
+            {
+                Console.WriteLine("No such file {0}", path);
+                ok = false;
+            }
+            else
+            {
+                File = path;
             }
             return ok;
         }

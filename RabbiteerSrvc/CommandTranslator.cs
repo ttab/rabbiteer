@@ -127,17 +127,23 @@ namespace Rabbiteer
             if (props.ContentType.StartsWith("text/"))
             {
                 // XXX is this good? are ttnitf iso8859-1?
+                // we need to check xml and html files for headers.
                 props.ContentEncoding = "UTF-8";
             }
             byte[] body;
             try
             {
                 string path = Path.GetFullPath(command.File);
+                if (!File.Exists(path))
+                {
+                    Console.WriteLine("File not found {0}", command.File);
+                    return;
+                }
                 body = File.ReadAllBytes(path);
             }
-            catch (FileNotFoundException)
+            catch (Exception e)
             {
-                Console.WriteLine("File not found {0}", command.File);
+                Console.WriteLine("Failed to read file '{0}': {1}", command.File, e.Message);
                 return;
             }
             model.BasicPublish(command.Exchange, command.RoutingKey, props, body);
