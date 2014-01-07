@@ -41,7 +41,12 @@ namespace Rabbiteer
         {
             try
             {
-                return queue.AddCommand(command);
+                bool r = queue.AddCommand(command);
+                if (!r)
+                {
+                    Console.WriteLine("Failed. Service did not accept command");
+                }
+                return r;
             }
             catch (RemotingException re)
             {

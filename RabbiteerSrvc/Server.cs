@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Runtime.Remoting.Channels.Ipc;
 using System.Collections;
 using System.Runtime.Remoting;
+using System.Threading;
 
 namespace Rabbiteer
 {
@@ -47,8 +48,18 @@ namespace Rabbiteer
             {
                 queue.acceptCommands = isOpen;
             };
+            queue.acceptCommands = amqpHandler.isOpen();
 
             CommandTranslator commandTranslator = new CommandTranslator(amqpHandler);
+
+            new Thread(delegate()
+            {
+                dynamic comm;
+                while ((comm = queue.GetCommand()) != null)
+                {
+                    commandTranslator.Translate(comm);
+                }
+            }).Start();
 
         }
 
@@ -58,8 +69,9 @@ namespace Rabbiteer
             serverChannel = null;
             if (amqpHandler != null) amqpHandler.shutdown();
             amqpHandler = null;
+            // null shuts down thread
+            queue.AddCommand(null);
         }
-
 
     }
 }

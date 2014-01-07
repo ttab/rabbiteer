@@ -15,7 +15,6 @@ namespace Rabbiteer
 
         private ConnectionFactory factory;
         private IConnection connection;
-        public IModel model {get; private set;}
         public event OpenHandler Open;
         public delegate void OpenHandler(bool isOpen);
 
@@ -28,6 +27,16 @@ namespace Rabbiteer
             connect();
         }
 
+        public bool isOpen()
+        {
+            return connection != null;
+        }
+
+        public IModel Model()
+        {
+            return connection != null ? connection.CreateModel() : null;
+        }
+
         private void connect()
         {
             if (connection != null)
@@ -35,7 +44,6 @@ namespace Rabbiteer
                 disconnect();
             }
             connection = factory.CreateConnection();
-            model = connection.CreateModel();
             if (Open != null) Open(true);
             Console.WriteLine("AMQP Connected");
         }
@@ -48,13 +56,12 @@ namespace Rabbiteer
             {
                 connection.Abort(5);
             }
-            catch (AlreadyClosedException ace) { 
+            catch (AlreadyClosedException) { 
                 // ye ye
             }
-            catch (IOException ioe) {
+            catch (IOException) {
                 // unexpected close
             }
-            model = null;
             connection = null;
             Console.WriteLine("AMQP Closed");
         }

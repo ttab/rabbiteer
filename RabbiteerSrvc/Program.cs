@@ -15,11 +15,6 @@ namespace Rabbiteer
             // debug run
             RabbiteerService srvc = new RabbiteerService();
             srvc.DoStart();
-            Command com;
-            while ((com = srvc.server.queue.GetCommand()) != null)
-            {
-                Console.WriteLine("{0}", com);
-            }            
  #else
             // start as service
             ServiceBase[] ServicesToRun;

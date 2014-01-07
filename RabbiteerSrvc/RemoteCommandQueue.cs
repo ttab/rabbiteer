@@ -15,7 +15,11 @@ namespace Rabbiteer
 
         public bool AddCommand(Command command)
         {
-            if (!acceptCommands) return false;
+            if (!acceptCommands)
+            {
+                Console.WriteLine("Service did not accept command.");
+                return false;
+            }
             queue.Add(command);
             return true;
         }

@@ -46,6 +46,16 @@ namespace Rabbiteer
             }
             return ok;
         }
+
+        public override int GetHashCode()
+        {
+            int i = QueueName.GetHashCode();
+            i = 31 * i + Exchange.GetHashCode();
+            i = 31 * i + RoutingKey.GetHashCode();
+            i = 31 * i + OutDir.GetHashCode();
+            return i;
+        }
+
     }
 
     [Serializable]
