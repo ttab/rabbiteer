@@ -22,20 +22,8 @@ namespace Rabbiteer
             QueueDeclareOk ok = amqpHandler.model.QueueDeclare(command.QueueName, true, false, false, null);
             Console.WriteLine("{0}", ok);
             amqpHandler.model.QueueBind(command.QueueName, command.Exchange, command.RoutingKey, null);
-            Consumer cons = new Consumer();
-            amqpHandler.model.BasicConsume(command.QueueName, true, cons);            
         }
 
-        private class Consumer : IBasicConsumer
-        {
-            public void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, byte[] body)
-            {
-                Console.WriteLine("Deliver {0} {1}", consumerTag, routingKey);
-            }
-            public void HandleModelShutdown(IModel model, ShutdownEventArgs reason)
-            {
-            }
-        }
 
         public void Translate(PublishCommand command)
         {
