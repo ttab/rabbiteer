@@ -50,14 +50,18 @@ namespace Rabbiteer
             };
             queue.acceptCommands = amqpHandler.isOpen();
 
-            CommandTranslator commandTranslator = new CommandTranslator(amqpHandler);
+            CommandHandler handler = new CommandHandler(amqpHandler);
 
             new Thread(delegate()
             {
                 dynamic comm;
                 while ((comm = queue.GetCommand()) != null)
                 {
-                    commandTranslator.Translate(comm);
+                    while (true)
+                    {
+                        if (handler.Translate(comm)) break;
+                        Thread.Sleep(3000);
+                    }
                 }
             }).Start();
 

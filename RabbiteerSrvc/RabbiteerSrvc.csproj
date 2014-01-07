@@ -70,7 +70,7 @@
   <ItemGroup>
     <Compile Include="AmqpHandler.cs" />
     <Compile Include="Command.cs" />
-    <Compile Include="CommandTranslator.cs" />
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="MimeType.cs" />
     <Compile Include="RabbitMsg.cs" />
     <Compile Include="RemoteCommandQueue.cs" />

@@ -6,6 +6,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rabbiteer
@@ -15,6 +16,7 @@ namespace Rabbiteer
 
         private ConnectionFactory factory;
         private IConnection connection;
+        private bool reconnecting = false;
         public event OpenHandler Open;
         public delegate void OpenHandler(bool isOpen);
 
@@ -34,18 +36,44 @@ namespace Rabbiteer
 
         public IModel Model()
         {
-            return connection != null ? connection.CreateModel() : null;
+            try {
+                return connection != null ? connection.CreateModel() : null;
+            }
+            catch (OperationInterruptedException e)
+            {
+                Console.WriteLine("AMQP failed: {0}", e.Message);
+                disconnect();
+                startReconnect();
+                return null;
+            }
         }
 
-        private void connect()
+        private bool connect()
         {
             if (connection != null)
             {
                 disconnect();
             }
-            connection = factory.CreateConnection();
+            try
+            {
+                connection = factory.CreateConnection();
+            }
+            catch (OperationInterruptedException e)
+            {
+                Console.WriteLine("Connect failed: {0}", e.Message);
+                startReconnect();
+                return false;
+            }
+            catch (BrokerUnreachableException e)
+            {
+                Console.WriteLine("Connect failed: {0}", e.Message);
+                startReconnect();
+                return false;
+            }
+            reconnecting = false;
             if (Open != null) Open(true);
             Console.WriteLine("AMQP Connected");
+            return true;
         }
 
         private void disconnect()
@@ -68,7 +96,21 @@ namespace Rabbiteer
 
         public void shutdown()
         {
+            reconnecting = false;
             disconnect();
+        }
+
+        private void startReconnect()
+        {
+            if (reconnecting) return;
+            reconnecting = true;
+            new Thread(delegate() {
+                while (reconnecting)
+                {
+                    if (connect()) return;
+                    Thread.Sleep(3000);
+                }
+            }).Start();
         }
 
     }
