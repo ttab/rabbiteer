@@ -27,34 +27,30 @@ namespace Rabbiteer
             bool ok = true;
             if (QueueName == null)
             {
-                Console.WriteLine("Missing QueueName");
+                Console.WriteLine("Missing QueueName -q");
                 ok = false;
             }
             if (Exchange == null)
             {
-                Console.WriteLine("Missing Exchange");
+                Console.WriteLine("Missing Exchange -e");
                 ok = false;
             }
             if (RoutingKey == null)
             {
-                Console.WriteLine("Missing RoutingKey");
+                Console.WriteLine("Missing RoutingKey -r");
                 ok = false;
             }
             if (OutDir == null)
             {
-                Console.WriteLine("Missing OutDir");
+                Console.WriteLine("Missing OutDir -o");
                 ok = false;
             }
             string path = Path.GetFullPath(OutDir);
             if (!System.IO.Directory.Exists(path))
             {
-                Console.WriteLine("No such directory {0}", path);
-                ok = false;
+                Console.WriteLine("Warning, directory does not exist: {0}", path);
             }
-            else
-            {
-                OutDir = path;
-            }
+            OutDir = path;
             return ok;
         }
 
@@ -82,17 +78,17 @@ namespace Rabbiteer
             bool ok = true;
             if (Exchange == null)
             {
-                Console.WriteLine("Missing Exchange");
+                Console.WriteLine("Missing Exchange -e");
                 ok = false;
             }
             if (RoutingKey == null)
             {
-                Console.WriteLine("Missing RoutingKey");
+                Console.WriteLine("Missing RoutingKey -r");
                 ok = false;
             }
             if (File == null)
             {
-                Console.WriteLine("Missing File");
+                Console.WriteLine("Missing File -f");
                 ok = false;
             }
             string path = Path.GetFullPath(File);
