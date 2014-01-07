@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Ipc;
 using System.Security.Permissions;
 using System.Text;
@@ -38,7 +39,20 @@ namespace Rabbiteer
 
         public bool AddCommand(Command command)
         {
-            return queue.AddCommand(command);
+            try
+            {
+                return queue.AddCommand(command);
+            }
+            catch (RemotingException re)
+            {
+                Console.WriteLine("Remoting failed. {0}", re.Message);
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unknown error. {0}", e.Message);
+                return false;
+            }
         }
 
     }

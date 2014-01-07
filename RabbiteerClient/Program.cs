@@ -24,11 +24,11 @@ namespace Rabbiteer
 
             if (isBind)
             {
-                doBind(args);
+                DoBind(args);
             }
             else if (isPublish)
             {
-                doPublish(args);
+                DoPublish(args);
             }
             else
             {
@@ -40,7 +40,7 @@ namespace Rabbiteer
         }
 
 
-        private static void doBind(string[] args)
+        private static void DoBind(string[] args)
         {
             BindCommand c = new BindCommand();
             var p = new OptionSet()
@@ -55,10 +55,10 @@ namespace Rabbiteer
             {
                 Environment.Exit(-1);
             }
-            (new Client()).AddCommand(c);
+            DoAddCommand(c);
         }
 
-        private static void doPublish(string[] args)
+        private static void DoPublish(string[] args)
         {
             PublishCommand c = new PublishCommand();
             char[] del = new char[]{'='};
@@ -74,8 +74,13 @@ namespace Rabbiteer
             {
                 Environment.Exit(-1);
             }
-            (new Client()).AddCommand(c);
+            DoAddCommand(c);
+        }
 
+        private static void DoAddCommand(Command c)
+        {
+            bool r = (new Client()).AddCommand(c);
+            Environment.Exit(r ? 0 : -1);
         }
 
     }
