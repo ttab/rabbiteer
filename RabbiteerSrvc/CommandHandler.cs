@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,7 +51,7 @@ namespace Rabbiteer
                 {
                     Console.WriteLine("Ignoring different bind settings for queue name: {0}", command.QueueName);
                 }
-                return false;
+                return true;
             }
 
             // create new record which implicitly creates a consumer
@@ -153,7 +154,31 @@ namespace Rabbiteer
             public override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered,
                 string exchange, string routingKey, IBasicProperties properties, byte[] body)
             {
-                bool ok = DoHandle(body);
+                object oFileName;
+                string fileName = null;
+                properties.Headers.TryGetValue("fileName", out oFileName);
+                if (oFileName != null )
+                {
+                    try
+                    {
+                        fileName = System.Text.Encoding.UTF8.GetString((byte[])oFileName);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Failed to decode 'fileName' header as UTF-8: {0}", e.Message);
+                    }
+                }
+                string contentType = properties.ContentType;
+                if (contentType == null)
+                {
+                    if (fileName != null) {
+                        contentType = MimeType.GetMimeType(fileName);
+                    } else {
+                        // last fallback
+                        contentType = "application/octet-stream";
+                    }
+                }
+                bool ok = DoHandle(body, fileName, contentType);
                 if (ok)
                 {
                     model.BasicAck(deliveryTag, false);
@@ -164,7 +189,7 @@ namespace Rabbiteer
                 }
             }
 
-            private bool DoHandle(byte[] body)
+            private bool DoHandle(byte[] body, string fileName, string contentType)
             {
                 if (!Directory.Exists(outdir))
                 {
@@ -178,24 +203,69 @@ namespace Rabbiteer
                         return false;
                     }
                 }
-                try
+                int i = 0;
+                string path = null;
+                string baseName;
+                if (fileName == null)
                 {
-                    writeFile(body);
+                    fileName = DateTime.Now.ToString("yyyyMMdd-HHmmss") + MimeType.GetExtension(contentType);
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Failed to write file: {0}", e.Message);
-                    return false;
+                int idx = fileName.LastIndexOf('.');
+                if (idx >= 0) {
+                    baseName = fileName.Substring(0, idx) + "-{0:00}" + fileName.Substring(idx); 
+                } else {
+                    baseName = fileName + "-{0:00}";
+                }
+                while (true)
+                { 
+                    while (true)
+                    {
+                        if (fileName == null || i > 0)
+                            fileName = String.Format(baseName, i);
+                        path = Path.Combine(outdir, fileName);
+                        i++;
+                        if (i > 99)
+                        {
+                            Console.WriteLine("Failed to find unique filename: {0}", path);
+                            return false;
+                        }
+                        if (File.Exists(path)) continue;
+                        // XXX atomic creation here
+                        break;
+                    }
+                    try
+                    {
+                        writeFile(body, path);
+                        break;
+                    }
+                    catch (FileAlreadyExistException)
+                    {
+                        // try new file name
+                        continue;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Failed to write file: {0}", e.Message);
+                        return false;
+                    }
                 }
                 return true;
             }
 
-            private void writeFile(byte[] body)
+            // XXX can be removed if we do atomic creation above
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            private void writeFile(byte[] body, string path)
             {
-                Console.WriteLine("XXX Write file to {0}", outdir);
+                if (File.Exists(path))
+                    throw new FileAlreadyExistException();
+                File.WriteAllBytes(path, body);
             }
         }
 
+        internal class FileAlreadyExistException : IOException
+        {
+
+        }
 
         public bool Translate(PublishCommand command)
         {
@@ -204,6 +274,7 @@ namespace Rabbiteer
             IBasicProperties props = model.CreateBasicProperties();
             props.AppId = "Rabbiteer";
             props.Headers = command.Headers;
+            props.Headers.Add("fileName", Path.GetFileName(command.File));
             props.ContentType = MimeType.GetMimeType(command.File);
             if (props.ContentType.StartsWith("text/"))
             {

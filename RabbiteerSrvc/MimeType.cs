@@ -8,9 +8,23 @@ namespace Rabbiteer
 {
     class MimeType
     {
-        private static IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
+        private static IDictionary<string, string> _backward = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            {"application/xml", ".xml"},
+            {"application/octet-stream", ".dat"} // fine windows tradtition
+        };
+        private static IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
 
         #region Big freaking list of mime types
+
+        // more important backward mappings first
+        {".xml", "text/xml"},
+        {".json", "application/json"},
+        {".html", "text/html"},
+        {".txt", "text/plain"},
+        {".md", "text/plain"},
+
         // combination of values from Windows 7 Registry and 
         // from C:\Windows\System32\inetsrv\config\applicationHost.config
         // some added, including .7z and .dat
@@ -167,7 +181,6 @@ namespace Rabbiteer
         {".hta", "application/hta"},
         {".htc", "text/x-component"},
         {".htm", "text/html"},
-        {".html", "text/html"},
         {".htt", "text/webviewhtml"},
         {".hxa", "application/xml"},
         {".hxc", "application/xml"},
@@ -216,7 +229,6 @@ namespace Rabbiteer
         {".jpeg", "image/jpeg"},
         {".jpg", "image/jpeg"},
         {".js", "application/x-javascript"},
-        {".json", "application/json"},
         {".jsx", "text/jscript"},
         {".jsxbin", "text/plain"},
         {".latex", "application/x-latex"},
@@ -462,7 +474,6 @@ namespace Rabbiteer
         {".tsv", "text/tab-separated-values"},
         {".ttf", "application/octet-stream"},
         {".tts", "video/vnd.dlna.mpeg-tts"},
-        {".txt", "text/plain"},
         {".u32", "application/octet-stream"},
         {".uls", "text/iuls"},
         {".user", "text/plain"},
@@ -560,7 +571,6 @@ namespace Rabbiteer
         {".xltm", "application/vnd.ms-excel.template.macroEnabled.12"},
         {".xltx", "application/vnd.openxmlformats-officedocument.spreadsheetml.template"},
         {".xlw", "application/vnd.ms-excel"},
-        {".xml", "text/xml"},
         {".xmta", "application/xml"},
         {".xof", "x-world/x-vrml"},
         {".XOML", "text/plain"},
@@ -582,6 +592,18 @@ namespace Rabbiteer
 
         };
 
+        static MimeType()
+        {
+            // pick first mime type for backwards mapping
+            foreach (KeyValuePair<string, string> entry in _mappings)
+            {
+                if (!_backward.ContainsKey(entry.Value))
+                {
+                    _backward[entry.Value] = entry.Key;
+                }
+            }
+        }
+
         public static string GetMimeType(string path)
         {
             if (path == null)
@@ -594,6 +616,12 @@ namespace Rabbiteer
             string mime;
 
             return _mappings.TryGetValue(path, out mime) ? mime : "application/octet-stream";
+        }
+
+        public static string GetExtension(string contentType)
+        {
+            string ext;
+            return _backward.TryGetValue(contentType, out ext) ? ext : ".dat";
         }
     }
 
