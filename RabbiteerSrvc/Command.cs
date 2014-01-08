@@ -132,7 +132,6 @@ namespace Rabbiteer
             int i = Exchange.GetHashCode();
             i = 31 * i + RoutingKey.GetHashCode();
             i = 31 * i + File.GetHashCode();
-            i = 31 * i + Headers.GetHashCode();
             i = 31 * i + ReadyDir.GetHashCode();
             return i;
         }

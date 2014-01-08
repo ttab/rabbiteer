@@ -57,6 +57,7 @@ namespace Rabbiteer
                 dynamic comm;
                 while ((comm = queue.GetCommand()) != null)
                 {
+                    Thread.Sleep(10000);
                     while (true)
                     {
                         if (handler.Translate(comm)) break;

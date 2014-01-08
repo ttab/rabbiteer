@@ -17,8 +17,17 @@ namespace Rabbiteer
         {
             if (!acceptCommands)
             {
-                Console.WriteLine("Service did not accept command.");
+                Console.WriteLine("Service does not accept commands.");
                 return false;
+            }
+            int hash = command.GetHashCode();
+            foreach (Command c in queue)
+            {
+                if (c.GetHashCode() == hash)
+                {
+                    // ignoring command already in queue
+                    return true;
+                }
             }
             queue.Add(command);
             return true;
