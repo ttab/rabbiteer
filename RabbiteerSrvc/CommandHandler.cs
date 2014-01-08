@@ -212,9 +212,10 @@ namespace Rabbiteer
                 props.ContentEncoding = "UTF-8";
             }
             byte[] body;
+            string path;
             try
             {
-                string path = Path.GetFullPath(command.File);
+                path = Path.GetFullPath(command.File);
                 if (!File.Exists(path))
                 {
                     Console.WriteLine("File not found {0}", command.File);
@@ -228,9 +229,46 @@ namespace Rabbiteer
                 return false;
             }
 
-            // send off
-            model.BasicPublish(command.Exchange, command.RoutingKey, props, body);
-            
+            if (!Directory.Exists(command.ReadyDir))
+            {
+                try
+                {
+                    System.IO.Directory.CreateDirectory(command.ReadyDir);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Failed to create dir '{0}': {1}", command.ReadyDir, e.Message);
+                    return false;
+                }
+            }
+
+            try {
+                // send off
+                model.BasicPublish(command.Exchange, command.RoutingKey, props, body);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to publish: {0}", e.Message);
+                return false;
+            }
+
+            // move file
+            string curDir = Directory.GetParent(path).ToString();
+            if (curDir != command.ReadyDir)
+            {
+                try
+                {
+                    string name = Path.GetFileName(path);
+                    string target = Path.Combine(command.ReadyDir, name);
+                    Directory.Move(path, target);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Failed to move file '{0}' to dir '{1}': {2}", command.File, command.ReadyDir, e.Message);
+                    return false;
+                }
+            }
+
             return true;
         }
     }

@@ -68,6 +68,7 @@ namespace Rabbiteer
                 {"r|routingkey=", v => c.RoutingKey = v},
                 {"h|header=", v => c.Headers.Add(v.Split(del, 2)[0], v.Split(del, 2)[1])},
                 {"f|file=", v => c.File = v},
+                {"d|dir=", v => c.ReadyDir = v}
             };
             p.Parse(args);
             if (!c.Validate())
