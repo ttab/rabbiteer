@@ -17,7 +17,7 @@ namespace Rabbiteer
         {
             if (!acceptCommands)
             {
-                Console.WriteLine("Service does not accept commands.");
+                Log.Info("Service does not accept commands.");
                 return false;
             }
             int hash = command.GetHashCode();

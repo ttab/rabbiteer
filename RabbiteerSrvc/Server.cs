@@ -28,10 +28,14 @@ namespace Rabbiteer
 
             // Register the server channel.
             System.Runtime.Remoting.Channels.ChannelServices.RegisterChannel(
-                serverChannel, true);
+                serverChannel, false);
+
+            Log.Info("Creating command queue singleton");
 
             // singleton
             queue = new RemoteCommandQueue();
+
+            Log.Info("Exporting singleton");
 
             // export singleton
             RemotingServices.Marshal(queue, "RabbiteerRemoteCommandQueue");  
@@ -40,8 +44,10 @@ namespace Rabbiteer
             string[] urls = serverChannel.GetUrlsForUri("RabbiteerRemoteCommandQueue");
             if (urls.Length > 0)
             {
-                Console.WriteLine("The object URL is {0}.", urls[0]);
+                Log.Info("The object URL is {0}.", urls[0]);
             }
+
+            Log.Info("Creating AMQP handler");
 
             amqpHandler = new AmqpHandler();
             amqpHandler.Open += delegate(bool isOpen)
@@ -49,6 +55,8 @@ namespace Rabbiteer
                 queue.acceptCommands = isOpen;
             };
             queue.acceptCommands = amqpHandler.isOpen();
+
+            Log.Info("Creating command handler");
 
             CommandHandler handler = new CommandHandler(amqpHandler);
 
@@ -64,6 +72,8 @@ namespace Rabbiteer
                     }
                 }
             }).Start();
+
+            Log.Info("Server is up");
 
         }
 

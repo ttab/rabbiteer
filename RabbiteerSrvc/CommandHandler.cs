@@ -33,10 +33,10 @@ namespace Rabbiteer
                     rec.model = model;
                     if (!rec.connect())
                     {
-                        Console.WriteLine("Rebind failed");
+                        Log.Error("Rebind failed");
                         return;
                     }
-                    Console.WriteLine("Rebound: {0}", rec.command.QueueName);
+                    Log.Info("Rebound: {0}", rec.command.QueueName);
                 }
             }
         }
@@ -49,7 +49,7 @@ namespace Rabbiteer
             {
                 if (record.command.GetHashCode() != command.GetHashCode())
                 {
-                    Console.WriteLine("Ignoring different bind settings for queue name: {0}", command.QueueName);
+                    Log.Info("Ignoring different bind settings for queue name: {0}", command.QueueName);
                 }
                 return true;
             }
@@ -70,7 +70,7 @@ namespace Rabbiteer
                 return false;
             }
 
-            Console.WriteLine("Queue '{0}' bound to exchange '{1}' with routingKey '{2}'. Output to: {3}.", command.QueueName,
+            Log.Info("Queue '{0}' bound to exchange '{1}' with routingKey '{2}'. Output to: {3}.", command.QueueName,
                 command.Exchange, command.RoutingKey, command.OutDir);
 
             // remember we have this binding
@@ -112,7 +112,7 @@ namespace Rabbiteer
                 }
                 catch (OperationInterruptedException e)
                 {
-                    Console.WriteLine("Ignoring bind command, failed to declare queue: {0}", e.Message);
+                    Log.Warn("Ignoring bind command, failed to declare queue: {0}", e.Message);
                     return false;
                 }
                 try
@@ -126,12 +126,12 @@ namespace Rabbiteer
                 {
                     if (e.ShutdownReason.ReplyCode == 404)
                     {
-                        Console.WriteLine("Ignoring bind command, no such exchange: {0}", command.Exchange);
+                        Log.Warn("Ignoring bind command, no such exchange: {0}", command.Exchange);
                         return false;
                     }
                     else
                     {
-                        Console.WriteLine(e.Message);
+                        Log.Warn(e.Message);
                         return false;
                     }
                 }
@@ -165,7 +165,7 @@ namespace Rabbiteer
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Failed to decode 'fileName' header as UTF-8: {0}", e.Message);
+                        Log.Warn("Failed to decode 'fileName' header as UTF-8: {0}", e.Message);
                     }
                 }
                 string contentType = properties.ContentType;
@@ -199,7 +199,7 @@ namespace Rabbiteer
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Failed to create outdir '{0}': {1}", outdir, e.Message);
+                        Log.Error("Failed to create outdir '{0}': {1}", outdir, e.Message);
                         return false;
                     }
                 }
@@ -226,7 +226,7 @@ namespace Rabbiteer
                         i++;
                         if (i > 99)
                         {
-                            Console.WriteLine("Failed to find unique filename: {0}", path);
+                            Log.Error("Failed to find unique filename: {0}", path);
                             return false;
                         }
                         if (File.Exists(path)) continue;
@@ -245,7 +245,7 @@ namespace Rabbiteer
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Failed to write file: {0}", e.Message);
+                        Log.Error("Failed to write file: {0}", e.Message);
                         return false;
                     }
                 }
@@ -289,14 +289,14 @@ namespace Rabbiteer
                 path = Path.GetFullPath(command.File);
                 if (!File.Exists(path))
                 {
-                    Console.WriteLine("File not found {0}", command.File);
+                    Log.Warn("File not found {0}", command.File);
                     return false;
                 }
                 body = File.ReadAllBytes(path);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed to read file '{0}': {1}", command.File, e.Message);
+                Log.Error("Failed to read file '{0}': {1}", command.File, e.Message);
                 return false;
             }
 
@@ -308,7 +308,7 @@ namespace Rabbiteer
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Failed to create dir '{0}': {1}", command.ReadyDir, e.Message);
+                    Log.Error("Failed to create dir '{0}': {1}", command.ReadyDir, e.Message);
                     return false;
                 }
             }
@@ -319,7 +319,7 @@ namespace Rabbiteer
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed to publish: {0}", e.Message);
+                Log.Error("Failed to publish: {0}", e.Message);
                 return false;
             }
 
@@ -335,7 +335,7 @@ namespace Rabbiteer
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Failed to move file '{0}' to dir '{1}': {2}", command.File, command.ReadyDir, e.Message);
+                    Log.Error("Failed to move file '{0}' to dir '{1}': {2}", command.File, command.ReadyDir, e.Message);
                     return false;
                 }
             }

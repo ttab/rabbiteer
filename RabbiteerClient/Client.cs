@@ -44,18 +44,18 @@ namespace Rabbiteer
                 bool r = queue.AddCommand(command);
                 if (!r)
                 {
-                    Console.WriteLine("Failed. Service did not accept command");
+                    Log.Error("Failed. Service did not accept command");
                 }
                 return r;
             }
             catch (RemotingException re)
             {
-                Console.WriteLine("Remoting failed. {0}", re.Message);
+                Log.Error("Remoting failed. {0}", re.Message);
                 return false;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Unknown error. {0}", e.Message);
+                Log.Error("Unknown error. {0}", e.Message);
                 return false;
             }
         }

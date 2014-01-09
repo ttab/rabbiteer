@@ -27,22 +27,22 @@ namespace Rabbiteer
             bool ok = true;
             if (QueueName == null)
             {
-                Console.WriteLine("Missing QueueName -q");
+                Log.Error("Missing QueueName -q");
                 ok = false;
             }
             if (Exchange == null)
             {
-                Console.WriteLine("Missing Exchange -e");
+                Log.Error("Missing Exchange -e");
                 ok = false;
             }
             if (RoutingKey == null)
             {
-                Console.WriteLine("Missing RoutingKey -r");
+                Log.Error("Missing RoutingKey -r");
                 ok = false;
             }
             if (OutDir == null)
             {
-                Console.WriteLine("Missing OutDir -o");
+                Log.Error("Missing OutDir -o");
                 ok = false;
             }
             else
@@ -50,7 +50,7 @@ namespace Rabbiteer
                 string path = Path.GetFullPath(OutDir);
                 if (!System.IO.Directory.Exists(path))
                 {
-                    Console.WriteLine("Warning, directory does not exist: {0}", path);
+                    Log.Warn("Warning, directory does not exist: {0}", path);
                     // this is not a stop condition
                 }
                 OutDir = path;
@@ -83,17 +83,17 @@ namespace Rabbiteer
             bool ok = true;
             if (Exchange == null)
             {
-                Console.WriteLine("Missing Exchange -e");
+                Log.Error("Missing Exchange -e");
                 ok = false;
             }
             if (RoutingKey == null)
             {
-                Console.WriteLine("Missing RoutingKey -r");
+                Log.Error("Missing RoutingKey -r");
                 ok = false;
             }
             if (File == null)
             {
-                Console.WriteLine("Missing File -f");
+                Log.Error("Missing File -f");
                 ok = false;
             }
             else
@@ -101,7 +101,7 @@ namespace Rabbiteer
                 string path = Path.GetFullPath(File);
                 if (!System.IO.File.Exists(path))
                 {
-                    Console.WriteLine("No such file {0}", path);
+                    Log.Error("No such file {0}", path);
                     ok = false;
                 }
                 else
@@ -111,7 +111,7 @@ namespace Rabbiteer
             }
             if (ReadyDir == null)
             {
-                Console.WriteLine("Missing ReadyDir -d");
+                Log.Error("Missing ReadyDir -d");
                 ok = false;
             }
             else
@@ -119,7 +119,7 @@ namespace Rabbiteer
                 string path = Path.GetFullPath(ReadyDir);
                 if (!System.IO.Directory.Exists(path))
                 {
-                    Console.WriteLine("Warning, directory does not exist: {0}", path);
+                    Log.Warn("Warning, directory does not exist: {0}", path);
                     // this is not a stop condition
                 }
                 ReadyDir = path;

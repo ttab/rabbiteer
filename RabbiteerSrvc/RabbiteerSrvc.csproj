@@ -71,6 +71,8 @@
     <Compile Include="AmqpHandler.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="CommandHandler.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="MimeType.cs" />
     <Compile Include="RabbitMsg.cs" />
     <Compile Include="RemoteCommandQueue.cs" />
@@ -93,6 +95,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="RabbitSrvc.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProjectInstaller.resx">

@@ -41,7 +41,7 @@ namespace Rabbiteer
             }
             catch (OperationInterruptedException e)
             {
-                Console.WriteLine("AMQP failed: {0}", e.Message);
+                Log.Info("AMQP failed: {0}", e.Message);
                 disconnect();
                 startReconnect();
                 return null;
@@ -60,19 +60,19 @@ namespace Rabbiteer
             }
             catch (OperationInterruptedException e)
             {
-                Console.WriteLine("Connect failed: {0}", e.Message);
+                Log.Info("Connect failed: {0}", e.Message);
                 startReconnect();
                 return false;
             }
             catch (BrokerUnreachableException e)
             {
-                Console.WriteLine("Connect failed: {0}", e.Message);
+                Log.Info("Connect failed: {0}", e.Message);
                 startReconnect();
                 return false;
             }
             reconnecting = false;
             if (Open != null) Open(true);
-            Console.WriteLine("AMQP Connected");
+            Log.Info("AMQP Connected");
             return true;
         }
 
@@ -91,7 +91,7 @@ namespace Rabbiteer
                 // unexpected close
             }
             connection = null;
-            Console.WriteLine("AMQP Closed");
+            Log.Info("AMQP Closed");
         }
 
         public void shutdown()
