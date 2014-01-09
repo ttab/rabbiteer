@@ -15,6 +15,9 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+Installer/Out/
+Installer-cache*
+Installer.back.aip
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
