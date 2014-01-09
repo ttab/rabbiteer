@@ -22,10 +22,23 @@ namespace Rabbiteer
 
         public AmqpHandler()
         {
-            factory = new ConnectionFactory();
-            string uri = ConfigurationManager.AppSettings["amqpUri"].ToString();
-            Console.WriteLine("Using AMQP URI: {0}", uri);
-            factory.Uri = uri;
+            try
+            {
+                factory = new ConnectionFactory();
+                string host = Config.INSTANCE.GetValue("host", "amqp");
+                string vhost = Config.INSTANCE.GetValue("vhost", "amqp");
+                string login = Config.INSTANCE.GetValue("login", "amqp");
+                string password = Config.INSTANCE.GetValue("password", "amqp");
+                string uri = String.Format("amqp://{0}:{1}@{2}/{3}", login, password, host, vhost);
+                Log.Info("Using AMQP URI: {0}", uri);
+                factory.Uri = uri;
+            }
+            catch (Exception e)
+            {
+                Log.Error("Failed to configure AMQP connection: {0}", e.Message);
+                // this is fatal
+                throw e;
+            }
             connect();
         }
 
