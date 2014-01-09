@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DOCUMENT Type="Advanced Installer" CreateVersion="10.8" version="10.8" Modules="professional" RootPath="." Language="en" Id="{C478E77E-DF50-43A2-97BB-11975753B83B}">
   <COMPONENT cid="caphyon.advinst.msicomp.ProjectOptionsComponent">
-    <ROW Name="HiddenItems" Value="DigCertStoreComponent;UpdaterComponent;SerValComponent;MsiExtComponent;MsiAssemblyComponent;MsiOrgComponent;ActSyncAppComponent;MsiThemeComponent;BackgroundImagesComponent;DictionaryComponent;CPLAppletComponent;MsiClassComponent;WebApplicationsComponent;MsiOdbcDataSrcComponent;MsiAppSearchComponent"/>
+    <ROW Name="HiddenItems" Value="DigCertStoreComponent;UpdaterComponent;SerValComponent;MsiExtComponent;MsiAssemblyComponent;ActSyncAppComponent;MsiThemeComponent;BackgroundImagesComponent;DictionaryComponent;CPLAppletComponent;MsiClassComponent;WebApplicationsComponent;MsiOdbcDataSrcComponent;MsiAppSearchComponent"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
@@ -11,10 +11,10 @@
     <ROW Property="LIMITUI" Value="1" MultiBuildValue="DefaultBuild:"/>
     <ROW Property="Manufacturer" Value="TT Nyhetsbyran"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:v"/>
-    <ROW Property="ProductCode" Value="1033:{0826B348-616E-48B3-9132-74B3892E893F} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{59535066-2A2A-4789-9AF3-D7E897DD36F7} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Rabbiteer"/>
-    <ROW Property="ProductVersion" Value="1.0.0" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.0.3" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{2BA24276-45E9-4586-8663-371F2C1F34A3}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -30,7 +30,7 @@
     <ROW Component="NDesk.Options.dll" ComponentId="{0F7CAA4B-BE2F-4339-9E3F-27B2A1C7AC70}" Directory_="APPDIR" Attributes="0" KeyPath="NDesk.Options.dll"/>
     <ROW Component="ProductInformation" ComponentId="{63026697-CCB8-4308-A552-0E606FD679AE}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
     <ROW Component="RabbitMQ.Client.dll" ComponentId="{6C55169C-F332-4263-A2F8-359D5A888C20}" Directory_="APPDIR" Attributes="0" KeyPath="RabbitMQ.Client.dll"/>
-    <ROW Component="RabbitSrvc.ini" ComponentId="{565AA0FA-3CDF-419C-871B-3970775CE091}" Directory_="APPDIR" Attributes="0" KeyPath="RabbitSrvc.ini" Type="0"/>
+    <ROW Component="RabbitSrvc.ini" ComponentId="{565AA0FA-3CDF-419C-871B-3970775CE091}" Directory_="APPDIR" Attributes="16" KeyPath="RabbitSrvc.ini" Type="0"/>
     <ROW Component="Rabbiteer.exe" ComponentId="{242B1076-2CF4-4592-A630-4A56D79B4369}" Directory_="APPDIR" Attributes="0" KeyPath="Rabbiteer.exe"/>
     <ROW Component="RabbiteerSrvc.exe" ComponentId="{1FB595B2-3338-4E66-99F0-A1D987307307}" Directory_="APPDIR" Attributes="0" KeyPath="RabbiteerSrvc.exe"/>
   </COMPONENT>

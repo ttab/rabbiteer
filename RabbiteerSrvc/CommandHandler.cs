@@ -292,8 +292,8 @@ namespace Rabbiteer
                 path = Path.GetFullPath(command.File);
                 if (!File.Exists(path))
                 {
-                    Log.Warn("File not found {0}", command.File);
-                    return false;
+                    Log.Warn("File not found {0}, ignoring", command.File);
+                    return true;
                 }
                 body = File.ReadAllBytes(path);
             }
@@ -334,6 +334,11 @@ namespace Rabbiteer
                 {
                     string name = Path.GetFileName(path);
                     string target = Path.Combine(command.ReadyDir, name);
+                    if (File.Exists(target))
+                    {
+                        Log.Warn("Removing target: {0}", target);
+                        File.Delete(target);
+                    }
                     Directory.Move(path, target);
                 }
                 catch (Exception e)
