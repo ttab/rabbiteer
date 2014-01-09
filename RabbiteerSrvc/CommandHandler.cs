@@ -274,7 +274,10 @@ namespace Rabbiteer
             IBasicProperties props = model.CreateBasicProperties();
             props.AppId = "Rabbiteer";
             props.Headers = command.Headers;
-            props.Headers.Add("fileName", Path.GetFileName(command.File));
+            if (!props.Headers.ContainsKey("fileName"))
+            {
+                props.Headers.Add("fileName", Path.GetFileName(command.File));
+            }
             props.ContentType = MimeType.GetMimeType(command.File);
             if (props.ContentType.StartsWith("text/"))
             {

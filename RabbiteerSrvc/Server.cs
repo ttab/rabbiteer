@@ -8,6 +8,7 @@ using System.Runtime.Remoting.Channels.Ipc;
 using System.Collections;
 using System.Runtime.Remoting;
 using System.Threading;
+using System.Security.Principal;
 
 namespace Rabbiteer
 {
@@ -24,7 +25,29 @@ namespace Rabbiteer
         public void DoStart()
         {
 
-            serverChannel = new IpcChannel("localhost:" + SERVICE_PORT); 
+            Log.Info("Opening service channel");
+
+            IDictionary prop = new Hashtable();
+            prop["name"] = "RabbiteerSrvc";
+            prop["portName"] = "localhost:" + SERVICE_PORT;
+            prop["tokenImpersonationLevel"] = TokenImpersonationLevel.Impersonation;
+            prop["includeVersions"] = false;
+            prop["strictBinding"] = false;
+            prop["secure"] = true;
+            prop["authorizedGroup"] = "Everyone";
+
+            try
+            {
+                serverChannel = new IpcChannel(prop, null, null);
+            }
+            catch (RemotingException e)
+            {
+                Log.Error("Failed to open channel: {0}", e.Message);
+                // fatal
+                throw e;
+            }
+
+            Log.Info("Registering channel");
 
             // Register the server channel.
             System.Runtime.Remoting.Channels.ChannelServices.RegisterChannel(
