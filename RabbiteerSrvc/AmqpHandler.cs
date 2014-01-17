@@ -16,6 +16,7 @@ namespace Rabbiteer
 
         private ConnectionFactory factory;
         private IConnection connection;
+        private IModel model;
         private bool reconnecting = false;
         public event OpenHandler Open;
         public delegate void OpenHandler(bool isOpen);
@@ -50,7 +51,15 @@ namespace Rabbiteer
         public IModel Model()
         {
             try {
-                return connection != null ? connection.CreateModel() : null;
+                if (connection == null) {
+                    return null;
+                }
+                if (model == null || !model.IsOpen)
+                {
+                    doCloseModel();
+                    model = connection.CreateModel();
+                }
+                return model != null ? model : null;
             }
             catch (OperationInterruptedException e)
             {
@@ -59,6 +68,19 @@ namespace Rabbiteer
                 startReconnect();
                 return null;
             }
+        }
+
+        private void doCloseModel() {
+            if (model == null) return;
+            try
+            {
+                model.Abort();
+            }
+            catch (Exception)
+            {
+                // ignore
+            }
+            model = null;
         }
 
         private bool connect()
@@ -93,6 +115,7 @@ namespace Rabbiteer
         {
             if (connection == null) return;
             if (Open != null) Open(false);
+            doCloseModel();
             try
             {
                 connection.Abort(5);

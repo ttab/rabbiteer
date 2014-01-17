@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Rabbiteer Service")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("TT Nyhetsbyran")]
 [assembly: AssemblyProduct("Rabbiteer Service")]
 [assembly: AssemblyCopyright("Copyright © TT Nyhetsbyran 2014")]
 [assembly: AssemblyTrademark("")]
