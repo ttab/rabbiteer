@@ -91,6 +91,7 @@ namespace Rabbiteer
             }
             try
             {
+                model = null;
                 connection = factory.CreateConnection();
             }
             catch (OperationInterruptedException e)
