@@ -236,6 +236,7 @@ namespace Rabbiteer
                     }
                     try
                     {
+                        Log.Debug("Writing file ({0}): {1}", contentType, path);
                         writeFile(body, path);
                         break;
                     }
