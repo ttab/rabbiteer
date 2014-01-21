@@ -24,6 +24,7 @@ namespace Rabbiteer
         {".html", "text/html"},
         {".txt", "text/plain"},
         {".md", "text/plain"},
+        {".zip", "application/zip"},
 
         // combination of values from Windows 7 Registry and 
         // from C:\Windows\System32\inetsrv\config\applicationHost.config
@@ -587,7 +588,6 @@ namespace Rabbiteer
         {".xtp", "application/octet-stream"},
         {".xwd", "image/x-xwindowdump"},
         {".z", "application/x-compress"},
-        {".zip", "application/x-zip-compressed"},
         #endregion
 
         };
