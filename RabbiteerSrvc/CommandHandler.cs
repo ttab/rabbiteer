@@ -154,9 +154,10 @@ namespace Rabbiteer
             public override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered,
                 string exchange, string routingKey, IBasicProperties properties, byte[] body)
             {
-                object oFileName;
+                object oFileName = null;
                 string fileName = null;
-                properties.Headers.TryGetValue("fileName", out oFileName);
+                if (properties != null && properties.Headers != null)
+                    properties.Headers.TryGetValue("fileName", out oFileName);
                 if (oFileName != null )
                 {
                     try
