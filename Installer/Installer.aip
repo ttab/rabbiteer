@@ -11,10 +11,10 @@
     <ROW Property="LIMITUI" Value="1" MultiBuildValue="DefaultBuild:"/>
     <ROW Property="Manufacturer" Value="TT Nyhetsbyran"/>
     <ROW Property="MsiLogging" MultiBuildValue="DefaultBuild:v"/>
-    <ROW Property="ProductCode" Value="1033:{2428D441-E345-44FA-ABCD-1DB82F4FA072} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{388926D8-3B0E-4A59-AD2F-E2B058DD5206} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="Rabbiteer"/>
-    <ROW Property="ProductVersion" Value="1.0.4" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.0.5" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{2BA24276-45E9-4586-8663-371F2C1F34A3}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
